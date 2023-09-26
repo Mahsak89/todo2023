@@ -1,11 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
+import NavBar from './components/NavBar';
+import styles from "./App.module.css";
+import Container from "react-bootstrap/Container";
+import { Route, Switch } from "react-router-dom";
+import "./api/axiosDefaults";
+import SignUpForm from "./pages/auth/SignUpForm";
+import SignInForm from './pages/auth/SignInForm';
+import CategoryCreateForm from './pages/categories/CategoryCreateForm';
+import CreateTaskForm from './pages/CreateTaskForm';
+import Taskpage from './pages/tasks/Taskpage';
+
 
 function App() {
   return (
-    <div className="App">
-      <h1>Hi</h1>
-      <h1>Hi</h1>
+    <div className={styles.App}>
+     <NavBar/>
+     <Container className={styles.Main}>
+        <Switch>
+          <Route exact path="/" render={() => <h1>Home page</h1>} />
+          <Route exact path="/signin" render={() => <SignInForm />} />
+          <Route exact path="/signup" render={() => <SignUpForm />} />
+          <Route exact path="/categories/create" render={() => <CategoryCreateForm/> } />
+          <Route exact path="/tasks/create" render={() => <CreateTaskForm/> } />
+          <Route exact path="/tasks/:id" render={() => <Taskpage/>} />
+
+
+          <Route render={() => <p>Page not found!</p>} />
+        </Switch>
+      </Container>
     </div>
   );
 }
