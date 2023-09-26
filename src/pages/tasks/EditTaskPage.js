@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Button, Alert } from 'react-bootstrap';
-import { useHistory } from "react-router";
-import { axiosReq } from "../api/axiosDefaults";
+import { useHistory, useParams } from "react-router";
+import { axiosReq } from "../../api/axiosDefaults";
 
 
-function CreateTaskForm() {
+function EditTaskForm() {
 
     const [errors, setErrors] = useState({});
 
@@ -17,6 +17,23 @@ function CreateTaskForm() {
       });
       const { title, description, startdate, deadline, priority} = taskData;
       const history = useHistory();
+      const { id } = useParams();
+
+      useEffect(() => {
+        const handleMount = async () => {
+          try {
+            const { data } = await axiosReq.get(`/tasks/${id}/`);
+            const { title, description, startdate, deadline, priority, is_owner } = data;
+    
+            is_owner ? setTaskData({ title, description, startdate, deadline, priority}) : history.push("/");
+          } catch (err) {
+           // console.log(err);
+          }
+        };
+    
+        handleMount();
+      }, [history, id]);
+
 
       const handleChange = (event) => {
         setTaskData({
@@ -37,10 +54,10 @@ function CreateTaskForm() {
         
     
         try {
-          const { data } = await axiosReq.post("/tasks/", formData);
-          history.push(`/posts/${data.id}`);
+            await axiosReq.put(`/posts/${id}/`, formData);
+            history.push(`/posts/${id}`);
         } catch (err) {
-          console.log(err);
+         // console.log(err);
           if (err.response?.status !== 401) {
             setErrors(err.response?.data);
           }
@@ -135,7 +152,7 @@ function CreateTaskForm() {
         </Alert>
       ))}
         <Button variant="primary" type="submit">
-          Create Task
+          Save
         </Button>
       </Form>
  
@@ -143,4 +160,4 @@ function CreateTaskForm() {
   )
 }
 
-export default CreateTaskForm
+export default EditTaskForm

@@ -1,32 +1,50 @@
 import React from 'react';
 import styles from "../../styles/Post.module.css";
 import { useCurrentUser } from "../../contexts/CurrentUserContext";
-import { Card, OverlayTrigger, Tooltip } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Card} from "react-bootstrap";
+import { Link, useHistory } from "react-router-dom";
 import { axiosRes } from "../../api/axiosDefaults";
+import { MoreDropdown } from "../../components/MoreDropdown";
+
 
 
 const Task = (props) => {
     const {
         id,
         owner,
-        profile_id,
-        category,
+        //profile_id,
+        //category,
         title,
-        description,
-        created_at,
-        updated_at,
-        startdate,
-        deadline,
-        priority,
+       // description,
+       // created_at,
+        //updated_at,
+       // startdate,
+       // deadline,
+       // priority,
         state_id,
-        states_count,
+       // states_count,
         TaskPage,
+        TasksPage,
         setTasks,
       } = props
     
       const currentUser = useCurrentUser();
       const is_owner = currentUser?.username === owner;
+      const history = useHistory();
+
+      const handleEdit = () => {
+        history.push(`/tasks/${id}/edit`);
+      };
+    
+      const handleDelete = async () => {
+        try {
+          await axiosRes.delete(`/tasks/${id}/`);
+          history.goBack();
+        } catch (err) {
+         // console.log(err);
+        }
+      };
+    
 
       const handleLike = async () => {
         try {
@@ -40,7 +58,7 @@ const Task = (props) => {
             }),
           }));
         } catch (err) {
-          console.log(err);
+          //console.log(err);
         }
       };
     
@@ -56,7 +74,7 @@ const Task = (props) => {
             }),
           }));
         } catch (err) {
-          console.log(err);
+         // console.log(err);
         }
       };
 
@@ -66,6 +84,7 @@ const Task = (props) => {
 
   return (
     <Card className={styles.Post}>
+        
         <Card.Body>          
           <div className="d-flex align-items-center ">
             <span>
@@ -79,11 +98,25 @@ const Task = (props) => {
                 </span>
                 ) }
             </span>
-            {title && <p  className= "pt-3 ml-4">{title}</p>}
-            {is_owner && TaskPage && "..."}
+            {title &&<Link to={`/tasks/${id}`}> <p  className= "pt-3 ml-4">{title}</p></Link>}
+            {is_owner && TaskPage && (
+              <MoreDropdown
+                handleEdit={handleEdit}
+                handleDelete={handleDelete}
+              />
+            )
+            }
+            {is_owner && TasksPage && (
+              <MoreDropdown
+                handleEdit={handleEdit}
+                handleDelete={handleDelete}
+              />
+            )
+            }
           </div>
       
       </Card.Body>
+      
   </Card>
   );
 };

@@ -9,7 +9,7 @@ import { axiosReq } from "../../api/axiosDefaults";
 import Task from "./Task";
 
 
-function Taskpage() {
+function TaskPage() {
 
      const { id } = useParams();
   const [task, setTask] = useState({ results: [] });
@@ -21,9 +21,9 @@ function Taskpage() {
           axiosReq.get(`/tasks/${id}`),
         ]);
         setTask({ results: [task] });
-        console.log(task);
+        //console.log(task);
       } catch (err) {
-        console.log(err);
+        //console.log(err);
       }
     };
 
@@ -33,7 +33,7 @@ function Taskpage() {
     <Row className="h-100">
       <Col className="py-2 p-0 p-lg-2" lg={8}>
         <p>categories</p>
-        <Task  {...task.results[0]} setTasks = {setTask} Taskpage />
+        <Task  {...task.results[0]} setTasks = {setTask} TaskPage />
         <Container className={appStyles.Content}>sth</Container>
       </Col>
       <Col lg={4} className="d-none d-lg-block p-0 p-lg-2">
@@ -43,4 +43,4 @@ function Taskpage() {
   )
 }
 
-export default Taskpage
+export default TaskPage
